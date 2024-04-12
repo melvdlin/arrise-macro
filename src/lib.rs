@@ -5,11 +5,11 @@ use syn::{parse_macro_input, DeriveInput, Error};
 
 mod invoke_with_type_names;
 
-/// Generate the specified number of type names and pass the into an invocation of the provided macro.
-/// The generated type names are whitespace-separated.
+/// Generate a tuple of the specified arity
+/// and pass it into an invocation of the provided macro.
 #[proc_macro]
-pub fn invoke_with_type_names(args: TokenStream) -> TokenStream {
-    invoke_with_type_names::invoke_with_type_names(args)
+pub fn invoke_with_tuple(args: TokenStream) -> TokenStream {
+    invoke_with_type_names::invoke_with_tuple(args)
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }

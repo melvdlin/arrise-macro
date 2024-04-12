@@ -7,7 +7,7 @@ use syn::{LitInt, Path, Result, Token};
 struct Args {
     macro_path: Path,
     comma: Token![,],
-    names: usize,
+    arity: usize,
 }
 
 impl Parse for Args {
@@ -15,23 +15,23 @@ impl Parse for Args {
         Ok(Self {
             macro_path: input.parse()?,
             comma: input.parse()?,
-            names: input.parse::<LitInt>()?.base10_parse()?,
+            arity: input.parse::<LitInt>()?.base10_parse()?,
         })
     }
 }
 
-pub fn invoke_with_type_names(args: proc_macro::TokenStream) -> Result<TokenStream> {
+pub fn invoke_with_tuple(args: proc_macro::TokenStream) -> Result<TokenStream> {
     #[allow(unused_variables)]
     let Args {
         macro_path,
         comma,
-        names,
+        arity: names,
     } = syn::parse::<Args>(args)?;
 
     let names = (0..names).map(|n| format_ident!("T{n}"));
     Ok(quote! {
         #macro_path! {
-            #(#names)*
+            (#(#names,)*)
         }
     })
 }
