@@ -3,7 +3,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput, Error};
 
-mod deserialize_error_type;
+mod deserialize_error_type_for_tuple;
 mod invoke_with_type_names;
 
 /// Generate a tuple with trailing commas of the specified arity
@@ -17,8 +17,16 @@ pub fn invoke_with_tuple(args: TokenStream) -> TokenStream {
 
 /// Generate a deserialize error type for a given tuple.
 #[proc_macro]
-pub fn deserialize_error_type(args: TokenStream) -> TokenStream {
-    deserialize_error_type::deserialize_error_type(args)
+pub fn deserialize_error_type_for_tuple(args: TokenStream) -> TokenStream {
+    deserialize_error_type_for_tuple::deserialize_error_type_for_tuple(args)
+        .unwrap_or_else(Error::into_compile_error)
+        .into()
+}
+
+/// Generate a deserialize error type name for a given tuple.
+#[proc_macro]
+pub fn deserialize_error_type_name_for_tuple(args: TokenStream) -> TokenStream {
+    deserialize_error_type_for_tuple::deserialize_error_type_name_for_tuple(args)
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
