@@ -12,4 +12,4 @@ darling = "0.20.8"
 itertools = "0.12.1"
 proc-macro2 = "1.0.79"
 quote = "1.0.36"
-syn = { version = "2.0.58", features = ["full"] }
+syn = { version = "2.0.58" }
