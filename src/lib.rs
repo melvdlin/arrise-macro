@@ -3,13 +3,22 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput, Error};
 
+mod deserialize_error_type;
 mod invoke_with_type_names;
 
-/// Generate a tuple of the specified arity
+/// Generate a tuple with trailing commas of the specified arity
 /// and pass it into an invocation of the provided macro.
 #[proc_macro]
 pub fn invoke_with_tuple(args: TokenStream) -> TokenStream {
     invoke_with_type_names::invoke_with_tuple(args)
+        .unwrap_or_else(Error::into_compile_error)
+        .into()
+}
+
+/// Generate a deserialize error type for a given tuple.
+#[proc_macro]
+pub fn deserialize_error_type(args: TokenStream) -> TokenStream {
+    deserialize_error_type::deserialize_error_type(args)
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
