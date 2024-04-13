@@ -11,6 +11,21 @@ pub fn deserialize_error_type_name_for_tuple(
     Ok(quote!(#typename))
 }
 
+pub fn deserialize_error_assoc_type_for_tuple(
+    args: proc_macro::TokenStream,
+) -> syn::Result<TokenStream> {
+    let tuple_arg = syn::parse::<TypeTuple>(args.clone())?;
+    let all_tuple_elements = tuple_arg.elems.clone();
+    let tuple_elements = all_tuple_elements.iter().cloned().collect_vec();
+    let typename = deserialize_error_type_name_for_tuple(args)?;
+
+    let assoc_type = quote! {
+        #typename::<#(<#tuple_elements as DeserializeIntoUninit>::Error,)*>
+    };
+
+    Ok(assoc_type)
+}
+
 pub fn deserialize_error_type_for_tuple(args: proc_macro::TokenStream) -> syn::Result<TokenStream> {
     let tuple_arg = syn::parse::<TypeTuple>(args.clone())?;
     let all_tuple_elements = tuple_arg.elems.clone();

@@ -4,13 +4,13 @@ use quote::quote;
 use syn::{parse_macro_input, DeriveInput, Error};
 
 mod deserialize_error_type_for_tuple;
-mod invoke_with_type_names;
+mod impl_for_tuples;
 
-/// Generate a tuple with trailing commas of the specified arity
-/// and pass it into an invocation of the provided macro.
+/// implement `arrise::SerialSize`, `arrise::Serialize` and `arrise::DeserializeIntoUninit`
+/// for tuples up to the specified arity.
 #[proc_macro]
-pub fn invoke_with_tuple(args: TokenStream) -> TokenStream {
-    invoke_with_type_names::invoke_with_tuple(args)
+pub fn impl_for_tuples(args: TokenStream) -> TokenStream {
+    impl_for_tuples::impl_for_tuples(args)
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
@@ -23,10 +23,10 @@ pub fn deserialize_error_type_for_tuple(args: TokenStream) -> TokenStream {
         .into()
 }
 
-/// Generate a deserialize error type name for a given tuple.
+/// Generate a deserialize error type associated type for a given tuple.
 #[proc_macro]
-pub fn deserialize_error_type_name_for_tuple(args: TokenStream) -> TokenStream {
-    deserialize_error_type_for_tuple::deserialize_error_type_name_for_tuple(args)
+pub fn deserialize_error_assoc_type_for_tuple(args: TokenStream) -> TokenStream {
+    deserialize_error_type_for_tuple::deserialize_error_assoc_type_for_tuple(args)
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
